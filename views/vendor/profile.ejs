@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/vendor-sidebar') %>
+  <main class="dash-main">
+    <h3 class="mb-4">Profile Settings</h3>
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="pd-card p-4">
+          <h6 class="mb-3">Personal Information</h6>
+          <form method="POST" action="/vendor/profile" enctype="multipart/form-data">
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <img src="<%= user.avatar || '/images/default-avatar.svg' %>" class="rounded-circle" style="width:70px;height:70px;object-fit:cover;">
+              <div>
+                <input type="file" name="avatar" accept="image/*" class="form-control form-control-sm">
+                <small class="text-muted">PNG or JPG, max 8MB</small>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label">Full Name</label><input type="text" name="name" class="form-control" value="<%= user.name %>" required></div>
+              <div class="col-md-6"><label class="form-label">Phone</label><input type="text" name="phone" class="form-control" value="<%= user.phone || '' %>"></div>
+              <div class="col-12"><label class="form-label">Email</label><input type="email" name="email" class="form-control" value="<%= user.email %>" required></div>
+              <div class="col-12"><label class="form-label">Address</label><input type="text" name="address" class="form-control" value="<%= user.address || '' %>"></div>
+              <div class="col-md-6"><label class="form-label">City</label><input type="text" name="city" class="form-control" value="<%= user.city || '' %>"></div>
+            </div>
+            <button type="submit" class="btn btn-podify-primary rounded-pill px-4 mt-4">Save Changes</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="pd-card p-4">
+          <h6 class="mb-3">Change Password</h6>
+          <form method="POST" action="/vendor/profile/password">
+            <div class="mb-3"><label class="form-label">Current Password</label><input type="password" name="current_password" class="form-control" required></div>
+            <div class="mb-3"><label class="form-label">New Password</label><input type="password" name="new_password" class="form-control" required minlength="6"></div>
+            <div class="mb-3"><label class="form-label">Confirm New Password</label><input type="password" name="confirm_password" class="form-control" required minlength="6"></div>
+            <button type="submit" class="btn btn-podify-outline rounded-pill px-4">Update Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>

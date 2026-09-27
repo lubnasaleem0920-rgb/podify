@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="bg-pd-soft py-4">
+  <div class="container">
+    <h3 class="mb-0">Browse Products</h3>
+    <p class="text-muted mb-0">Find the perfect canvas for your next design</p>
+  </div>
+</div>
+
+<div class="container section-pad">
+  <div class="row g-4">
+    <!-- Filters -->
+    <div class="col-lg-3">
+      <div class="pd-card p-4">
+        <form method="GET" action="/products">
+          <h6 class="mb-3">Search</h6>
+          <input type="search" name="q" class="form-control mb-4" placeholder="Search products..." value="<%= filters.q %>">
+
+          <h6 class="mb-3">Category</h6>
+          <div class="mb-4">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="category" value="" id="catAll" <%= !filters.category ? 'checked' : '' %>>
+              <label class="form-check-label small" for="catAll">All Categories</label>
+            </div>
+            <% categories.forEach(cat => { %>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="category" value="<%= cat.slug %>" id="cat<%= cat.id %>" <%= filters.category === cat.slug ? 'checked' : '' %>>
+                <label class="form-check-label small" for="cat<%= cat.id %>"><%= cat.name %></label>
+              </div>
+            <% }) %>
+          </div>
+
+          <h6 class="mb-3">Price Range (Rs)</h6>
+          <div class="row g-2 mb-4">
+            <div class="col-6"><input type="number" name="min_price" class="form-control form-control-sm" placeholder="Min" value="<%= filters.min_price %>"></div>
+            <div class="col-6"><input type="number" name="max_price" class="form-control form-control-sm" placeholder="Max" value="<%= filters.max_price %>"></div>
+          </div>
+
+          <input type="hidden" name="sort" value="<%= filters.sort %>">
+          <button type="submit" class="btn btn-podify-primary w-100 rounded-pill">Apply Filters</button>
+          <a href="/products" class="btn btn-link w-100 text-center small mt-2">Clear all</a>
+        </form>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <span class="text-muted small"><%= products.length %> products found</span>
+        <select class="form-select form-select-sm w-auto" id="sortSelect" data-current-query='<%- JSON.stringify(filters) %>'>
+          <option value="" <%= !filters.sort ? 'selected' : '' %>>Newest First</option>
+          <option value="price_asc" <%= filters.sort==='price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="price_desc" <%= filters.sort==='price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="rating" <%= filters.sort==='rating' ? 'selected' : '' %>>Top Rated</option>
+        </select>
+      </div>
+
+      <div class="row g-4">
+        <% products.forEach(p => { %>
+          <div class="col-lg-4 col-md-6">
+            <%- include('../partials/product-card', { p }) %>
+          </div>
+        <% }) %>
+      </div>
+
+      <% if (products.length === 0) { %>
+        <div class="empty-state">
+          <i class="bi bi-search"></i>
+          <h5>No products found</h5>
+          <p class="text-muted">Try adjusting your filters or search terms.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script>
+document.getElementById('sortSelect')?.addEventListener('change', function () {
+  const current = JSON.parse(this.dataset.currentQuery || '{}');
+  const params = new URLSearchParams();
+  if (current.category) params.set('category', current.category);
+  if (current.q) params.set('q', current.q);
+  if (current.min_price) params.set('min_price', current.min_price);
+  if (current.max_price) params.set('max_price', current.max_price);
+  params.set('sort', this.value);
+  window.location.href = '/products?' + params.toString();
+});
+</script>
+</body>
+</html>

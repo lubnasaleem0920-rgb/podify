@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <main class="dash-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="mb-0">Category Management</h3>
+      <button class="btn btn-podify-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bi bi-plus-lg me-1"></i>Add Category</button>
+    </div>
+    <div class="pd-card">
+      <div class="table-responsive">
+        <table class="table pd-table mb-0">
+          <thead><tr><th>Name</th><th>Description</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <% categories.forEach(c => { %>
+              <tr>
+                <td class="fw-semibold small"><%= c.name %></td>
+                <td class="small text-muted"><%= c.description %></td>
+                <td><span class="status-pill status-<%= c.status %>"><%= c.status %></span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary rounded-pill" data-bs-toggle="modal" data-bs-target="#editModal<%= c.id %>">Edit</button>
+                  <form method="POST" action="/admin/categories/<%= c.id %>/delete" class="d-inline" data-confirm="Delete this category?"><button class="btn btn-sm btn-outline-danger rounded-pill"><i class="bi bi-trash"></i></button></form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% if (categories.length === 0) { %><p class="text-muted text-center py-4 mb-0">No categories yet.</p><% } %>
+    </div>
+  </main>
+</div>
+
+<!-- Edit modals moved outside the table — a <div> is not valid inside <tbody>, and
+     browsers silently relocate it when it is, which caused the edit form to blink
+     instead of opening. -->
+<% categories.forEach(c => { %>
+  <div class="modal fade" id="editModal<%= c.id %>" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+      <form method="POST" action="/admin/categories/<%= c.id %>/edit">
+        <div class="modal-header"><h5 class="modal-title">Edit Category</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Name</label><input type="text" name="name" class="form-control" value="<%= c.name %>" required></div>
+          <div class="mb-3"><label class="form-label">Description</label><textarea name="description" class="form-control"><%= c.description %></textarea></div>
+          <div class="mb-3"><label class="form-label">Status</label>
+            <select name="status" class="form-select"><option value="active" <%= c.status==='active'?'selected':'' %>>Active</option><option value="inactive" <%= c.status==='inactive'?'selected':'' %>>Inactive</option></select>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn btn-podify-primary rounded-pill px-4">Save Changes</button></div>
+      </form>
+    </div></div>
+  </div>
+<% }) %>
+
+<div class="modal fade" id="addModal" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <form method="POST" action="/admin/categories/new">
+      <div class="modal-header"><h5 class="modal-title">Add Category</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label class="form-label">Name</label><input type="text" name="name" class="form-control" required></div>
+        <div class="mb-3"><label class="form-label">Description</label><textarea name="description" class="form-control"></textarea></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-podify-primary rounded-pill px-4">Add Category</button></div>
+    </form>
+  </div></div>
+</div>
+
+<%- include('../partials/scripts') %>
+</body>
+</html>

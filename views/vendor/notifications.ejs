@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/vendor-sidebar') %>
+  <main class="dash-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="mb-0">Notifications</h3>
+      <button class="btn btn-podify-outline rounded-pill px-3" id="markAllReadBtn">Mark all as read</button>
+    </div>
+    <% if (notifications.length === 0) { %>
+      <div class="empty-state"><i class="bi bi-bell"></i><h5>No notifications</h5></div>
+    <% } else { %>
+      <div class="pd-card">
+        <% notifications.forEach((n, i) => { %>
+          <a href="<%= n.link || '#' %>" class="d-flex gap-3 p-3 notif-item <%= !n.is_read ? 'unread' : '' %> <%= i < notifications.length -1 ? 'border-bottom' : '' %>" data-notif-id="<%= n.id %>" style="<%= !n.is_read ? 'background:rgba(31,27,22,0.05);' : '' %>">
+            <div class="stat-icon" style="width:40px;height:40px;background:var(--pd-gradient-soft);color:var(--pd-primary);flex-shrink:0;">
+              <i class="bi <%= n.type==='order' ? 'bi-box-seam' : n.type==='promo' ? 'bi-tag' : 'bi-info-circle' %>"></i>
+            </div>
+            <div class="flex-grow-1">
+              <div class="fw-semibold small"><%= n.title %></div>
+              <div class="text-muted small"><%= n.message %></div>
+              <div class="text-muted" style="font-size:0.72rem;"><%= new Date(n.created_at).toLocaleString() %></div>
+            </div>
+            <% if (!n.is_read) { %><span class="badge-dot" style="position:static; border:none;">•</span><% } %>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>

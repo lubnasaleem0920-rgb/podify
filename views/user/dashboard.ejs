@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/user-sidebar') %>
+  <main class="dash-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div><h3 class="mb-0">Welcome back, <%= currentUser.name.split(' ')[0] %></h3><p class="text-muted mb-0">Here's what's happening with your account</p></div>
+      <button class="btn btn-podify-primary rounded-pill px-4 d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-3 col-6">
+        <div class="stat-card"><div class="stat-icon" style="background:var(--pd-gradient);"><i class="bi bi-box-seam"></i></div><div class="stat-value"><%= orderCount %></div><div class="stat-label">Total Orders</div></div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card"><div class="stat-icon" style="background:var(--pd-accent);"><i class="bi bi-heart"></i></div><div class="stat-value"><%= favCount %></div><div class="stat-label">Favorites</div></div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card"><div class="stat-icon" style="background:var(--pd-success);"><i class="bi bi-cash-coin"></i></div><div class="stat-value">Rs <%= spent.toFixed(0) %></div><div class="stat-label">Total Spent</div></div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card"><div class="stat-icon" style="background:var(--pd-warning);"><i class="bi bi-bell"></i></div><div class="stat-value"><%= typeof unreadNotifCount !== 'undefined' ? unreadNotifCount : 0 %></div><div class="stat-label">Unread Alerts</div></div>
+      </div>
+    </div>
+
+    <div class="pd-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Recent Orders</h5>
+        <a href="/user/orders" class="small">View all →</a>
+      </div>
+      <% if (recentOrders.length === 0) { %>
+        <div class="empty-state py-4"><i class="bi bi-box-seam"></i><h6>No orders yet</h6><p class="text-muted small">Start customizing your first product!</p><a href="/products" class="btn btn-podify-primary rounded-pill px-4 mt-2">Browse Products</a></div>
+      <% } else { %>
+        <div class="table-responsive">
+          <table class="table pd-table mb-0">
+            <thead><tr><th>Order #</th><th>Date</th><th>Total</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <% recentOrders.forEach(o => { %>
+                <tr>
+                  <td class="fw-semibold"><%= o.order_number %></td>
+                  <td class="text-muted small"><%= new Date(o.created_at).toLocaleDateString() %></td>
+                  <td>Rs <%= o.total.toFixed(2) %></td>
+                  <td><span class="status-pill status-<%= o.status %>"><%= o.status.replace('_',' ') %></span></td>
+                  <td><a href="/user/orders/<%= o.id %>" class="btn btn-sm btn-podify-outline rounded-pill">View</a></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>

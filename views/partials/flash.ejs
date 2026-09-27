@@ -1,0 +1,18 @@
+<% if ((flashSuccess && flashSuccess.length) || (flashError && flashError.length)) { %>
+<div class="toast-stack" id="toastStack">
+  <% flashSuccess.forEach(msg => { %>
+    <div class="app-toast toast-success">
+      <i class="bi bi-check-circle-fill"></i>
+      <span><%= msg %></span>
+      <button type="button" class="toast-close" data-action="close-toast">&times;</button>
+    </div>
+  <% }) %>
+  <% flashError.forEach(msg => { %>
+    <div class="app-toast toast-error">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      <span><%= msg %></span>
+      <button type="button" class="toast-close" data-action="close-toast">&times;</button>
+    </div>
+  <% }) %>
+</div>
+<% } %>

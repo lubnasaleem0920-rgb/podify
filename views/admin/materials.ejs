@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <main class="dash-main">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div><h3 class="mb-0">Material Management</h3><p class="text-muted mb-0">This powers both the price calculator and the customer's "elimination process" — group first, then exact material.</p></div>
+      <button class="btn btn-podify-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bi bi-plus-lg me-1"></i>Add Material</button>
+    </div>
+
+    <div class="alert alert-info mt-3">
+      <i class="bi bi-info-circle me-1"></i>
+      <strong>How this works:</strong> A material with <strong>no group</strong> (Top Level = "— None (top-level group) —") acts as a
+      <em>category</em> customers choose first (e.g. "Bare / Painted Surface"). A material placed <strong>inside</strong> a group is the
+      exact, priced option customers pick second (e.g. "Aluminium"). Simple products with only one relevant group skip straight to the
+      material list — no extra click needed.
+    </div>
+
+    <div class="pd-card mt-3">
+      <div class="table-responsive">
+        <table class="table pd-table mb-0">
+          <thead><tr><th>Material</th><th>Group</th><th>Price / sq.inch</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <% materials.forEach(m => { %>
+              <tr>
+                <td class="fw-semibold small">
+                  <% if (m.isGroup) { %><i class="bi bi-diagram-3 text-primary me-1" title="Group / Step 1"></i><% } else if (m.parent_id) { %><span class="ms-3"><i class="bi bi-arrow-return-right text-muted me-1"></i></span><% } else { %><i class="bi bi-square text-muted me-1" title="Standalone material"></i><% } %>
+                  <%= m.name %>
+                </td>
+                <td class="small text-muted"><%= m.parent_id ? (materials.find(g => g.id === m.parent_id) || {}).name : (m.isGroup ? '— Top-level group —' : '— Standalone (no group needed) —') %></td>
+                <td><%- (!m.isGroup) ? ('Rs ' + m.price_per_unit.toFixed(2)) : '<span class="text-muted">n/a</span>' %></td>
+                <td><span class="status-pill status-<%= m.status %>"><%= m.status %></span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary rounded-pill" data-bs-toggle="modal" data-bs-target="#editModal<%= m.id %>">Edit</button>
+                  <form method="POST" action="/admin/materials/<%= m.id %>/delete" class="d-inline" data-confirm="Delete this material? If it's a group, its children will be deleted too."><button class="btn btn-sm btn-outline-danger rounded-pill"><i class="bi bi-trash"></i></button></form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% if (materials.length === 0) { %><p class="text-muted text-center py-4 mb-0">No materials yet.</p><% } %>
+    </div>
+  </main>
+</div>
+
+<!-- Edit modals live outside the table entirely — a <div> is not valid inside <tbody>,
+     and browsers silently move it out of place when it is, which caused the edit form
+     to visually "blink" instead of opening properly. -->
+<% materials.forEach(m => { %>
+  <div class="modal fade" id="editModal<%= m.id %>" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+      <form method="POST" action="/admin/materials/<%= m.id %>/edit">
+        <div class="modal-header"><h5 class="modal-title">Edit Material</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Name</label><input type="text" name="name" class="form-control" value="<%= m.name %>" required></div>
+          <div class="mb-3">
+            <label class="form-label">Group (Step 1 choice)</label>
+            <select name="parent_id" class="form-select">
+              <option value="">— None (this is a top-level group) —</option>
+              <% groups.filter(g => g.id !== m.id).forEach(g => { %>
+                <option value="<%= g.id %>" <%= m.parent_id === g.id ? 'selected' : '' %>><%= g.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="mb-3"><label class="form-label">Price per sq.inch (Rs) — only used if this has a Group selected above</label><input type="number" step="0.01" name="price_per_unit" class="form-control" value="<%= m.price_per_unit %>"></div>
+          <div class="mb-3"><label class="form-label">Description</label><textarea name="description" class="form-control"><%= m.description %></textarea></div>
+          <div class="mb-3"><label class="form-label">Status</label>
+            <select name="status" class="form-select"><option value="active" <%= m.status==='active'?'selected':'' %>>Active</option><option value="inactive" <%= m.status==='inactive'?'selected':'' %>>Inactive</option></select>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn btn-podify-primary rounded-pill px-4">Save Changes</button></div>
+      </form>
+    </div></div>
+  </div>
+<% }) %>
+
+<div class="modal fade" id="addModal" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <form method="POST" action="/admin/materials/new">
+      <div class="modal-header"><h5 class="modal-title">Add Material</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label class="form-label">Name</label><input type="text" name="name" class="form-control" placeholder="e.g. Aluminium, or a new group like 'Wooden Surface'" required></div>
+        <div class="mb-3">
+          <label class="form-label">Group (Step 1 choice)</label>
+          <select name="parent_id" class="form-select">
+            <option value="">— None (this is a new top-level group) —</option>
+            <% groups.forEach(g => { %>
+              <option value="<%= g.id %>"><%= g.name %></option>
+            <% }) %>
+          </select>
+          <small class="text-muted">Leave as "None" to create a brand-new Step-1 group. Choose an existing group to add a new Step-2 material inside it.</small>
+        </div>
+        <div class="mb-3"><label class="form-label">Price per sq.inch (Rs) — leave 0 if this is a group</label><input type="number" step="0.01" name="price_per_unit" class="form-control" value="0"></div>
+        <div class="mb-3"><label class="form-label">Description</label><textarea name="description" class="form-control"></textarea></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-podify-primary rounded-pill px-4">Add Material</button></div>
+    </form>
+  </div></div>
+</div>
+
+<%- include('../partials/scripts') %>
+</body>
+</html>

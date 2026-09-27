@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <main class="dash-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div><h3 class="mb-1">Order <%= order.order_number %></h3><span class="text-muted small">Placed <%= new Date(order.created_at).toLocaleString() %></span></div>
+      <span class="status-pill status-<%= order.status %> fs-6"><%= order.status.replace('_',' ') %></span>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="pd-card p-4 mb-4">
+          <h6 class="mb-3">Items</h6>
+          <table class="table pd-table mb-0">
+            <thead><tr><th>Product</th><th>Vendor</th><th>Material/Size</th><th>Qty</th><th>Total</th><th>Design</th><th>Status</th><th>Override Status</th></tr></thead>
+            <tbody>
+              <% items.forEach(item => { %>
+                <tr>
+                  <td class="small fw-semibold"><%= item.product_name %></td>
+                  <td class="small"><%= item.vendor_name %></td>
+                  <td class="small"><%= item.color_name ? item.color_name + ' / ' : '' %><%= item.material_name || '—' %> / <%= item.size_label || '—' %></td>
+                  <td><%= item.quantity %></td>
+                  <td>Rs <%= item.line_total.toFixed(2) %></td>
+                  <td>
+                    <% if (item.front_preview) { %>
+                      <a href="<%= item.front_preview %>" target="_blank" title="View full design">
+                        <img src="<%= item.front_preview %>" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--pd-border);">
+                      </a>
+                      <a href="/admin/orders/design/<%= item.id %>/download" class="btn btn-sm btn-outline-secondary rounded-pill ms-1" title="Download design"><i class="bi bi-download"></i></a>
+                    <% } else { %>—<% } %>
+                  </td>
+                  <td><span class="status-pill status-<%= item.item_status %>"><%= item.item_status.replace('_',' ') %></span></td>
+                  <td>
+                    <select class="form-select form-select-sm admin-status-select" data-item-id="<%= item.id %>" style="width:150px;">
+                      <option value="">Change status...</option>
+                      <option value="placed" <%= item.item_status==='placed'?'selected':'' %>>Placed</option>
+                      <option value="confirmed" <%= item.item_status==='confirmed'?'selected':'' %>>Confirmed</option>
+                      <option value="in_production" <%= item.item_status==='in_production'?'selected':'' %>>In Production</option>
+                      <option value="shipped" <%= item.item_status==='shipped'?'selected':'' %>>Shipped</option>
+                      <option value="delivered" <%= item.item_status==='delivered'?'selected':'' %>>Delivered</option>
+                      <option value="cancelled" <%= item.item_status==='cancelled'?'selected':'' %>>Cancelled</option>
+                    </select>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div class="pd-card p-4">
+          <h6 class="mb-3">Status History</h6>
+          <ul class="list-unstyled mb-0">
+            <% history.forEach(h => { %>
+              <li class="d-flex gap-3 mb-3">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <div><div class="fw-semibold small text-capitalize"><%= h.status.replace('_',' ') %></div><div class="text-muted small"><%= new Date(h.created_at).toLocaleString() %></div></div>
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="pd-card p-4 mb-3">
+          <h6 class="mb-3">Customer</h6>
+          <p class="mb-1 small fw-semibold"><%= order.customer_name %></p>
+          <p class="mb-1 small text-muted"><%= order.customer_email %></p>
+          <p class="mb-1 small text-muted"><%= order.shipping_phone %></p>
+          <p class="mb-0 small text-muted"><%= order.shipping_address %>, <%= order.shipping_city %></p>
+        </div>
+        <div class="pd-card p-4">
+          <h6 class="mb-3">Payment</h6>
+          <div class="d-flex justify-content-between small mb-2"><span class="text-muted">Subtotal</span><span>Rs <%= order.subtotal.toFixed(2) %></span></div>
+          <div class="d-flex justify-content-between small mb-2"><span class="text-muted">Shipping</span><span>Rs <%= order.shipping_fee.toFixed(2) %></span></div>
+          <hr><div class="d-flex justify-content-between fw-bold mb-3"><span>Total</span><span>Rs <%= order.total.toFixed(2) %></span></div>
+          <form method="POST" action="/admin/orders/<%= order.id %>/payment-status">
+            <label class="form-label small">Payment Status</label>
+            <select name="payment_status" class="form-select form-select-sm mb-2">
+              <option value="pending" <%= order.payment_status==='pending'?'selected':'' %>>Pending</option>
+              <option value="paid" <%= order.payment_status==='paid'?'selected':'' %>>Paid</option>
+              <option value="failed" <%= order.payment_status==='failed'?'selected':'' %>>Failed</option>
+              <option value="refunded" <%= order.payment_status==='refunded'?'selected':'' %>>Refunded</option>
+            </select>
+            <button class="btn btn-sm btn-podify-primary rounded-pill w-100">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+<script>
+document.querySelectorAll('.admin-status-select').forEach(sel => {
+  sel.addEventListener('change', async () => {
+    if (!sel.value) return;
+    const res = await fetch(`/admin/order-items/${sel.dataset.itemId}/status`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ status: sel.value }) });
+    const data = await res.json();
+    if (data.ok) window.location.reload(); else alert(data.error || 'Failed to update');
+  });
+});
+</script>
+</body>
+</html>

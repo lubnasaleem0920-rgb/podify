@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <main class="dash-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div><h3 class="mb-0">Print Size Management</h3><p class="text-muted mb-0">Sizes define the printable area (width × height) used in price calculation</p></div>
+      <button class="btn btn-podify-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bi bi-plus-lg me-1"></i>Add Size</button>
+    </div>
+    <div class="pd-card">
+      <div class="table-responsive">
+        <table class="table pd-table mb-0">
+          <thead><tr><th>Label</th><th>Dimensions</th><th>Price / sq.inch</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <% sizes.forEach(s => { %>
+              <tr>
+                <td class="fw-semibold small"><%= s.label %></td>
+                <td class="small"><%= s.width_in %>in × <%= s.height_in %>in (<%= (s.width_in*s.height_in).toFixed(1) %> sq.in)</td>
+                <td>Rs <%= s.price_per_sq_inch.toFixed(2) %></td>
+                <td><span class="status-pill status-<%= s.status %>"><%= s.status %></span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary rounded-pill" data-bs-toggle="modal" data-bs-target="#editModal<%= s.id %>">Edit</button>
+                  <form method="POST" action="/admin/sizes/<%= s.id %>/delete" class="d-inline" data-confirm="Delete this size?"><button class="btn btn-sm btn-outline-danger rounded-pill"><i class="bi bi-trash"></i></button></form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% if (sizes.length === 0) { %><p class="text-muted text-center py-4 mb-0">No print sizes yet.</p><% } %>
+    </div>
+  </main>
+</div>
+
+<!-- Edit modals moved outside the table — see materials.ejs for why this matters. -->
+<% sizes.forEach(s => { %>
+  <div class="modal fade" id="editModal<%= s.id %>" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+      <form method="POST" action="/admin/sizes/<%= s.id %>/edit">
+        <div class="modal-header"><h5 class="modal-title">Edit Print Size</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Label</label><input type="text" name="label" class="form-control" value="<%= s.label %>" required></div>
+          <div class="row g-2 mb-3">
+            <div class="col-6"><label class="form-label">Width (in)</label><input type="number" step="0.1" name="width_in" class="form-control" value="<%= s.width_in %>" required></div>
+            <div class="col-6"><label class="form-label">Height (in)</label><input type="number" step="0.1" name="height_in" class="form-control" value="<%= s.height_in %>" required></div>
+          </div>
+          <div class="mb-3"><label class="form-label">Price per sq.inch (Rs)</label><input type="number" step="0.01" name="price_per_sq_inch" class="form-control" value="<%= s.price_per_sq_inch %>" required></div>
+          <div class="mb-3"><label class="form-label">Status</label>
+            <select name="status" class="form-select"><option value="active" <%= s.status==='active'?'selected':'' %>>Active</option><option value="inactive" <%= s.status==='inactive'?'selected':'' %>>Inactive</option></select>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn btn-podify-primary rounded-pill px-4">Save Changes</button></div>
+      </form>
+    </div></div>
+  </div>
+<% }) %>
+
+<div class="modal fade" id="addModal" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <form method="POST" action="/admin/sizes/new">
+      <div class="modal-header"><h5 class="modal-title">Add Print Size</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label class="form-label">Label</label><input type="text" name="label" class="form-control" placeholder="e.g. Small, Medium, Large, Full Wrap" required></div>
+        <div class="row g-2 mb-3">
+          <div class="col-6"><label class="form-label">Width (in)</label><input type="number" step="0.1" name="width_in" class="form-control" required></div>
+          <div class="col-6"><label class="form-label">Height (in)</label><input type="number" step="0.1" name="height_in" class="form-control" required></div>
+        </div>
+        <div class="mb-3"><label class="form-label">Price per sq.inch (Rs)</label><input type="number" step="0.01" name="price_per_sq_inch" class="form-control" required></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-podify-primary rounded-pill px-4">Add Size</button></div>
+    </form>
+  </div></div>
+</div>
+
+<%- include('../partials/scripts') %>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <script src="/vendor/chartjs/chart.umd.min.js"></script>
+</head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <main class="dash-main">
+    <h3 class="mb-4">Admin Dashboard</h3>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-gradient);"><i class="bi bi-people"></i></div><div class="stat-value"><%= stats.totalUsers %></div><div class="stat-label">Total Customers</div></div></div>
+      <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-accent);"><i class="bi bi-shop"></i></div><div class="stat-value"><%= stats.totalVendors %></div><div class="stat-label">Active Vendors</div></div></div>
+      <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-warning);"><i class="bi bi-hourglass-split"></i></div><div class="stat-value"><%= stats.pendingVendors + stats.pendingProducts %></div><div class="stat-label">Pending Approvals</div></div></div>
+      <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-success);"><i class="bi bi-cash-coin"></i></div><div class="stat-value">Rs <%= stats.totalRevenue.toFixed(0) %></div><div class="stat-label">Total Revenue</div></div></div>
+    </div>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-primary-light);"><i class="bi bi-box-seam"></i></div><div class="stat-value"><%= stats.totalProducts %></div><div class="stat-label">Live Products (<%= stats.pendingProducts %> pending)</div></div></div>
+      <div class="col-md-6"><div class="stat-card"><div class="stat-icon" style="background:linear-gradient(135deg,#2A2420,#4A4235);"><i class="bi bi-bag-check"></i></div><div class="stat-value"><%= stats.totalOrders %></div><div class="stat-label">Total Orders</div></div></div>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-lg-7">
+        <div class="pd-card p-4"><h6 class="mb-3">Sales — Last 14 Days</h6><canvas id="salesChart" height="120"></canvas></div>
+      </div>
+      <div class="col-lg-5">
+        <div class="pd-card p-4"><h6 class="mb-3">Top Selling Products</h6><canvas id="topProductsChart" height="160"></canvas></div>
+      </div>
+    </div>
+
+    <div class="pd-card p-4">
+      <div class="d-flex justify-content-between mb-3"><h6 class="mb-0">Recent Orders</h6><a href="/admin/orders" class="small">View all →</a></div>
+      <table class="table pd-table mb-0">
+        <thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          <% recentOrders.forEach(o => { %>
+            <tr>
+              <td class="fw-semibold small"><a href="/admin/orders/<%= o.id %>"><%= o.order_number %></a></td>
+              <td class="small"><%= o.customer_name %></td>
+              <td>Rs <%= o.total.toFixed(2) %></td>
+              <td><span class="status-pill status-<%= o.payment_status %>"><%= o.payment_status %></span></td>
+              <td><span class="status-pill status-<%= o.status %>"><%= o.status.replace('_',' ') %></span></td>
+              <td class="text-muted small"><%= new Date(o.created_at).toLocaleDateString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+<script>
+Chart.defaults.color = '#A9A3C2';
+Chart.defaults.borderColor = 'rgba(31,27,22,0.12)';
+new Chart(document.getElementById('salesChart'), {
+  type: 'line',
+  data: {
+    labels: <%- JSON.stringify(salesByDay.map(d => d.day)) %>,
+    datasets: [{ label: 'Sales (Rs)', data: <%- JSON.stringify(salesByDay.map(d => d.total)) %>, borderColor: '#2A2420', backgroundColor: 'rgba(31,27,22,0.08)', fill: true, tension: 0.4, pointBackgroundColor: '#6B6355' }]
+  },
+  options: { plugins: { legend: { display: false } } }
+});
+new Chart(document.getElementById('topProductsChart'), {
+  type: 'bar',
+  data: {
+    labels: <%- JSON.stringify(topProducts.map(p => p.name)) %>,
+    datasets: [{ label: 'Units Sold', data: <%- JSON.stringify(topProducts.map(p => p.sold)) %>, backgroundColor: '#4A4235' }]
+  },
+  options: { plugins: { legend: { display: false } }, indexAxis: 'y' }
+});
+</script>
+</body>
+</html>

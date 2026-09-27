@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/user-sidebar') %>
+  <main class="dash-main">
+    <h3 class="mb-4">My Favorites</h3>
+    <% if (favorites.length === 0) { %>
+      <div class="empty-state"><i class="bi bi-heart"></i><h5>No favorites yet</h5><p class="text-muted">Tap the heart icon on any product to save it here.</p><a href="/products" class="btn btn-podify-primary rounded-pill px-4 mt-2">Browse Products</a></div>
+    <% } else { %>
+      <div class="row g-4">
+        <% favorites.forEach(p => { %>
+          <div class="col-lg-3 col-md-4 col-6"><%- include('../partials/product-card', { p }) %></div>
+        <% }) %>
+      </div>
+    <% } %>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>

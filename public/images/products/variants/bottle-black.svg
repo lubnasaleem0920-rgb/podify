@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <radialGradient id="bgGlow1" cx="25%" cy="15%" r="60%">
+      <stop offset="0" stop-color="#2A2420" stop-opacity="0.55"/><stop offset="1" stop-color="#0A0912" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlow2" cx="85%" cy="85%" r="55%">
+      <stop offset="0" stop-color="#1A1613" stop-opacity="0.4"/><stop offset="1" stop-color="#0A0912" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bottleBody" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0F0D16"/>
+      <stop offset="0.18" stop-color="#4A4658"/>
+      <stop offset="0.4" stop-color="#242030"/>
+      <stop offset="0.75" stop-color="#0F0D16"/>
+      <stop offset="1" stop-color="#0F0D16"/>
+    </linearGradient>
+    <linearGradient id="capGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#241F19"/><stop offset="0.3" stop-color="#4A4235"/><stop offset="1" stop-color="#14110D"/>
+    </linearGradient>
+    <radialGradient id="groundShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.6"/><stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="500" height="500" fill="#0A0912"/>
+  <rect width="500" height="500" fill="url(#bgGlow1)"/>
+  <rect width="500" height="500" fill="url(#bgGlow2)"/>
+  <ellipse cx="250" cy="458" rx="100" ry="16" fill="url(#groundShadow)"/>
+
+  <!-- cap -->
+  <rect x="213" y="50" width="74" height="38" rx="9" fill="url(#capGrad)"/>
+  <rect x="222" y="36" width="56" height="24" rx="7" fill="url(#capGrad)"/>
+  <rect x="222" y="36" width="10" height="24" fill="#ffffff" opacity="0.15"/>
+
+  <!-- neck -->
+  <path d="M222 88 L222 122 Q222 135 236 135 L264 135 Q278 135 278 122 L278 88 Z" fill="url(#bottleBody)"/>
+
+  <!-- body -->
+  <path d="M165 140 Q165 122 195 122 L305 122 Q335 122 335 140 L335 195 Q350 225 350 275 L350 405 Q350 442 305 442 L195 442 Q150 442 150 405 L150 275 Q150 225 165 195 Z"
+        fill="url(#bottleBody)" stroke="#00000030" stroke-width="1.5"/>
+
+  <!-- highlight streak -->
+  <path d="M182 150 Q176 290 182 420" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="14" stroke-linecap="round"/>
+  <!-- secondary rim light -->
+  <path d="M330 150 Q336 290 330 420" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- printable label area -->
+  <rect id="printArea" x="182" y="235" width="136" height="145" rx="10" fill="#FFFFFF" fill-opacity="0.07" stroke="#F5F0E0" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="250" y="308" font-family="Poppins, sans-serif" font-size="14" fill="#F5F0E0" fill-opacity="0.55" text-anchor="middle">Your Design</text>
+  <text x="250" y="326" font-family="Poppins, sans-serif" font-size="14" fill="#F5F0E0" fill-opacity="0.55" text-anchor="middle">Here</text>
+</svg>

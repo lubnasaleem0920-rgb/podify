@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <radialGradient id="bgGlow1" cx="25%" cy="15%" r="60%">
+      <stop offset="0" stop-color="#2A2420" stop-opacity="0.55"/><stop offset="1" stop-color="#0A0912" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlow2" cx="85%" cy="85%" r="55%">
+      <stop offset="0" stop-color="#1A1613" stop-opacity="0.4"/><stop offset="1" stop-color="#0A0912" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bodyShade" x1="0.15" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#4A4658"/>
+      <stop offset="0.45" stop-color="#242030"/>
+      <stop offset="1" stop-color="#0F0D16"/>
+    </linearGradient>
+    <linearGradient id="sleeveShadeL" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#242030"/><stop offset="1" stop-color="#0F0D16"/>
+    </linearGradient>
+    <linearGradient id="sleeveShadeR" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4A4658"/><stop offset="1" stop-color="#242030"/>
+    </linearGradient>
+    <linearGradient id="rimLight" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="groundShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.55"/><stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="500" height="500" fill="#0A0912"/>
+  <rect width="500" height="500" fill="url(#bgGlow1)"/>
+  <rect width="500" height="500" fill="url(#bgGlow2)"/>
+
+  <ellipse cx="250" cy="452" rx="150" ry="20" fill="url(#groundShadow)"/>
+
+  <!-- left sleeve -->
+  <path d="M175 95 L108 138 L78 195 L118 222 L150 178 L150 430 Q150 445 165 445 L175 445 L175 175 Z" fill="url(#sleeveShadeL)" stroke="#00000022" stroke-width="1.5"/>
+  <!-- right sleeve -->
+  <path d="M325 95 L392 138 L422 195 L382 222 L350 178 L350 430 Q350 445 335 445 L325 445 L325 175 Z" fill="url(#sleeveShadeR)" stroke="#00000022" stroke-width="1.5"/>
+
+  <!-- main body -->
+  <path d="M178 90 L200 58 L250 82 L300 58 L322 90 L322 435 Q322 448 308 448 L192 448 Q178 448 178 435 Z"
+        fill="url(#bodyShade)" stroke="#00000030" stroke-width="1.5" stroke-linejoin="round"/>
+
+  <!-- collar -->
+  <path d="M200 58 Q250 108 300 58 Q292 78 250 88 Q208 78 200 58 Z" fill="#0F0D16" opacity="0.65"/>
+  <path d="M200 58 Q250 100 300 58" fill="none" stroke="#0F0D16" stroke-width="3" opacity="0.5"/>
+
+  <!-- fold/crease shading -->
+  <path d="M210 160 Q215 300 205 430" fill="none" stroke="#00000018" stroke-width="14" stroke-linecap="round"/>
+  <path d="M290 160 Q285 300 295 430" fill="none" stroke="#00000018" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- center highlight sheen -->
+  <path d="M240 95 Q248 260 244 440" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="20" stroke-linecap="round"/>
+
+  <!-- rim light along right edge -->
+  <rect x="316" y="95" width="8" height="345" fill="url(#rimLight)" opacity="0.7"/>
+
+  <!-- printable area guide -->
+  <rect id="printArea" x="197" y="185" width="106" height="135" rx="6" fill="#FFFFFF" fill-opacity="0.06" stroke="#F5F0E0" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="250" y="248" font-family="Poppins, sans-serif" font-size="13" fill="#F5F0E0" fill-opacity="0.55" text-anchor="middle">Your Design</text>
+  <text x="250" y="266" font-family="Poppins, sans-serif" font-size="13" fill="#F5F0E0" fill-opacity="0.55" text-anchor="middle">Here</text>
+</svg>

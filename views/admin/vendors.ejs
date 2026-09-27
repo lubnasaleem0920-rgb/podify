@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <main class="dash-main">
+    <h3 class="mb-4">Vendor Management</h3>
+
+    <h6 class="mb-3">Pending Approval (<%= pending.length %>)</h6>
+    <div class="pd-card mb-4">
+      <% if (pending.length === 0) { %><p class="text-muted text-center py-4 mb-0">No pending vendor applications.</p><% } else { %>
+      <div class="table-responsive">
+        <table class="table pd-table mb-0">
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Applied</th><th></th></tr></thead>
+          <tbody>
+            <% pending.forEach(v => { %>
+              <tr>
+                <td class="fw-semibold small"><%= v.name %></td>
+                <td class="small"><%= v.email %></td>
+                <td class="small"><%= v.phone || '—' %></td>
+                <td class="small text-muted"><%= new Date(v.created_at).toLocaleDateString() %></td>
+                <td>
+                  <form method="POST" action="/admin/vendors/<%= v.id %>/approve" class="d-inline"><button class="btn btn-sm btn-podify-primary rounded-pill px-3">Approve</button></form>
+                  <form method="POST" action="/admin/vendors/<%= v.id %>/reject" class="d-inline"><button class="btn btn-sm btn-outline-danger rounded-pill px-3">Reject</button></form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+
+    <h6 class="mb-3">Active Vendors (<%= active.length %>)</h6>
+    <div class="pd-card mb-4">
+      <div class="table-responsive">
+        <table class="table pd-table mb-0">
+          <thead><tr><th>Name</th><th>Email</th><th>Joined</th></tr></thead>
+          <tbody>
+            <% active.forEach(v => { %>
+              <tr><td class="fw-semibold small"><%= v.name %></td><td class="small"><%= v.email %></td><td class="small text-muted"><%= new Date(v.created_at).toLocaleDateString() %></td></tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% if (active.length === 0) { %><p class="text-muted text-center py-4 mb-0">No active vendors yet.</p><% } %>
+    </div>
+
+    <h6 class="mb-3">Blocked / Rejected (<%= blocked.length %>)</h6>
+    <div class="pd-card">
+      <div class="table-responsive">
+        <table class="table pd-table mb-0">
+          <thead><tr><th>Name</th><th>Email</th></tr></thead>
+          <tbody>
+            <% blocked.forEach(v => { %>
+              <tr><td class="fw-semibold small"><%= v.name %></td><td class="small"><%= v.email %></td></tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% if (blocked.length === 0) { %><p class="text-muted text-center py-4 mb-0">None.</p><% } %>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>

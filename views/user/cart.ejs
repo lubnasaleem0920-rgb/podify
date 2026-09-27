@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="container section-pad">
+  <h3 class="mb-4"><i class="bi bi-bag me-2"></i>My Cart</h3>
+
+  <% if (items.length === 0) { %>
+    <div class="empty-state">
+      <i class="bi bi-bag-x"></i>
+      <h5>Your cart is empty</h5>
+      <p class="text-muted">Start customizing a product to see it here.</p>
+      <a href="/products" class="btn btn-podify-primary rounded-pill px-4 mt-2">Browse Products</a>
+    </div>
+  <% } else { %>
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <% items.forEach(item => { %>
+          <div class="pd-card p-3 mb-3 cart-item" data-item-id="<%= item.id %>">
+            <div class="row g-3 align-items-center">
+              <div class="col-md-2 col-4">
+                <img src="<%= item.front_preview || item.front_image %>" class="rounded-3 w-100" style="aspect-ratio:1;object-fit:cover;">
+              </div>
+              <div class="col-md-4 col-8">
+                <h6 class="mb-1"><%= item.product_name %></h6>
+                <div class="text-muted small">
+                  <% if (item.color_name) { %><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:<%= item.color_hex %>;"></span><%= item.color_name %> · <% } %>
+                  <%= item.material_name || 'Standard' %> · <%= item.size_label || 'Standard' %>
+                </div>
+              </div>
+              <div class="col-md-3 col-6">
+                <div class="qty-stepper d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-secondary qty-minus">−</button>
+                  <input type="number" class="form-control form-control-sm text-center cart-qty-input" style="width:56px" value="<%= item.quantity %>" min="1" data-item-id="<%= item.id %>">
+                  <button type="button" class="btn btn-sm btn-outline-secondary qty-plus">+</button>
+                </div>
+              </div>
+              <div class="col-md-2 col-4">
+                <div class="fw-semibold line-total" data-unit="<%= item.unit_price %>">Rs <%= (item.unit_price * item.quantity).toFixed(2) %></div>
+                <small class="text-muted">Rs <%= item.unit_price.toFixed(2) %> each</small>
+              </div>
+              <div class="col-md-1 col-2 text-end">
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-item-btn" data-item-id="<%= item.id %>"><i class="bi bi-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+      <div class="col-lg-4">
+        <div class="pd-card p-4 sticky-summary">
+          <h6 class="mb-3">Order Summary</h6>
+          <div class="d-flex justify-content-between mb-2"><span class="text-muted">Subtotal</span><span id="cartSubtotal">Rs <%= subtotal.toFixed(2) %></span></div>
+          <div class="d-flex justify-content-between mb-2"><span class="text-muted">Shipping</span><span>Calculated at checkout</span></div>
+          <hr>
+          <div class="d-flex justify-content-between fw-bold fs-5 mb-4"><span>Total</span><span id="cartTotal">Rs <%= subtotal.toFixed(2) %></span></div>
+          <a href="/user/checkout" class="btn btn-podify-primary w-100 py-2 rounded-pill-lg">Proceed to Checkout</a>
+          <a href="/products" class="btn btn-link w-100 text-center small mt-2">Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script>
+document.querySelectorAll('.cart-qty-input').forEach(input => {
+  input.addEventListener('change', async () => {
+    const id = input.dataset.itemId;
+    const res = await fetch(`/api/cart/update/${id}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ quantity: input.value }) });
+    const data = await res.json();
+    if (data.ok) {
+      const row = input.closest('.cart-item');
+      row.querySelector('.line-total').textContent = 'Rs ' + data.lineTotal.toFixed(2);
+      recomputeTotals();
+    }
+  });
+});
+document.querySelectorAll('.remove-item-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const id = btn.dataset.itemId;
+    await fetch(`/api/cart/remove/${id}`, { method: 'POST' });
+    btn.closest('.cart-item').remove();
+    recomputeTotals();
+  });
+});
+function recomputeTotals() {
+  let sum = 0;
+  document.querySelectorAll('.line-total').forEach(el => sum += parseFloat(el.textContent.replace('Rs','').trim()));
+  document.getElementById('cartSubtotal').textContent = 'Rs ' + sum.toFixed(2);
+  document.getElementById('cartTotal').textContent = 'Rs ' + sum.toFixed(2);
+  if (sum === 0) window.location.reload();
+}
+</script>
+</body>
+</html>

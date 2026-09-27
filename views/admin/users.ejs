@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <main class="dash-main">
+    <h3 class="mb-4">User Management</h3>
+    <ul class="nav nav-pills customizer-tabs mb-4 gap-2">
+      <li><a class="nav-link <%= role==='customer'?'active':'' %>" href="/admin/users?role=customer">Customers</a></li>
+      <li><a class="nav-link <%= role==='admin'?'active':'' %>" href="/admin/users?role=admin">Admins</a></li>
+    </ul>
+    <div class="pd-card">
+      <div class="table-responsive">
+        <table class="table pd-table mb-0">
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <% users.forEach(u => { %>
+              <tr>
+                <td><div class="d-flex align-items-center gap-2"><img src="<%= u.avatar || '/images/default-avatar.svg' %>" class="avatar-sm"><span class="small fw-semibold"><%= u.name %></span></div></td>
+                <td class="small"><%= u.email %></td>
+                <td class="small"><%= u.phone || '—' %></td>
+                <td class="small text-muted"><%= new Date(u.created_at).toLocaleDateString() %></td>
+                <td><span class="status-pill status-<%= u.status %>"><%= u.status %></span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary rounded-pill toggle-status-btn" data-id="<%= u.id %>"><%= u.status === 'blocked' ? 'Unblock' : 'Block' %></button>
+                  <form method="POST" action="/admin/users/<%= u.id %>/delete" class="d-inline" data-confirm="Delete this user permanently?">
+                    <button class="btn btn-sm btn-outline-danger rounded-pill"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% if (users.length === 0) { %><p class="text-muted text-center py-4">No users found.</p><% } %>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+<script>
+document.querySelectorAll('.toggle-status-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const res = await fetch(`/admin/users/${btn.dataset.id}/toggle-status`, { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) window.location.reload();
+  });
+});
+</script>
+</body>
+</html>

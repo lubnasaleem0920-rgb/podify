@@ -1,0 +1,13 @@
+<aside class="dash-sidebar">
+  <div class="d-flex align-items-center gap-2 mb-4 px-2">
+    <div class="brand-mark"><i class="bi bi-stars"></i></div>
+    <span class="brand-text">Podify</span>
+  </div>
+  <div class="side-heading">Vendor Panel</div>
+  <a href="/vendor/dashboard" class="side-link <%= currentPath === '/vendor/dashboard' ? 'active' : '' %>"><i class="bi bi-speedometer2"></i> Dashboard</a>
+  <a href="/vendor/products" class="side-link <%= currentPath.startsWith('/vendor/products') ? 'active' : '' %>"><i class="bi bi-box-seam"></i> My Products</a>
+  <a href="/vendor/orders" class="side-link <%= currentPath === '/vendor/orders' ? 'active' : '' %>"><i class="bi bi-bag-check"></i> Orders</a>
+  <div class="side-heading">Account</div>
+  <a href="/vendor/profile" class="side-link <%= currentPath === '/vendor/profile' ? 'active' : '' %>"><i class="bi bi-person-circle"></i> Profile Settings</a>
+  <a href="/auth/logout" class="side-link text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+</aside>

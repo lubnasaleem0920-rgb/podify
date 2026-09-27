@@ -1,0 +1,16 @@
+<aside class="dash-sidebar">
+  <div class="d-flex align-items-center gap-2 mb-4 px-2">
+    <div class="brand-mark"><i class="bi bi-stars"></i></div>
+    <span class="brand-text">Podify</span>
+  </div>
+  <div class="side-heading">Menu</div>
+  <a href="/user/dashboard" class="side-link <%= currentPath === '/user/dashboard' ? 'active' : '' %>"><i class="bi bi-speedometer2"></i> Dashboard</a>
+  <a href="/products" class="side-link"><i class="bi bi-shop"></i> Browse Products</a>
+  <a href="/user/orders" class="side-link <%= currentPath.startsWith('/user/orders') ? 'active' : '' %>"><i class="bi bi-box-seam"></i> My Orders</a>
+  <a href="/user/cart" class="side-link <%= currentPath === '/user/cart' ? 'active' : '' %>"><i class="bi bi-bag"></i> My Cart</a>
+  <a href="/user/favorites" class="side-link <%= currentPath === '/user/favorites' ? 'active' : '' %>"><i class="bi bi-heart"></i> Favorites</a>
+  <div class="side-heading">Account</div>
+  <a href="/user/profile" class="side-link <%= currentPath === '/user/profile' ? 'active' : '' %>"><i class="bi bi-person"></i> Profile Settings</a>
+  <a href="/user/notifications" class="side-link <%= currentPath === '/user/notifications' ? 'active' : '' %>"><i class="bi bi-bell"></i> Notifications</a>
+  <a href="/auth/logout" class="side-link text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+</aside>

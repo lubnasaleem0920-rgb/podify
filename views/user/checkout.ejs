@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="container section-pad">
+  <h3 class="mb-4"><i class="bi bi-credit-card me-2"></i>Checkout</h3>
+  <form method="POST" action="/user/checkout">
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="pd-card p-4 mb-4">
+          <h6 class="mb-3">Shipping Information</h6>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Full Name</label><input type="text" name="shipping_name" class="form-control" value="<%= user.name %>" required></div>
+            <div class="col-md-6"><label class="form-label">Phone</label><input type="text" name="shipping_phone" class="form-control" value="<%= user.phone || '' %>" required></div>
+            <div class="col-12"><label class="form-label">Address</label><input type="text" name="shipping_address" class="form-control" value="<%= user.address || '' %>" required></div>
+            <div class="col-md-6"><label class="form-label">City</label><input type="text" name="shipping_city" class="form-control" value="<%= user.city || '' %>" required></div>
+          </div>
+        </div>
+
+        <div class="pd-card p-4 mb-4">
+          <h6 class="mb-3">Payment Method</h6>
+          <div class="form-check mb-2 p-3 border rounded-3">
+            <input class="form-check-input" type="radio" name="payment_method" value="cod" id="payCod" checked>
+            <label class="form-check-label fw-semibold" for="payCod"><i class="bi bi-cash-stack me-2"></i>Cash on Delivery</label>
+          </div>
+          <div class="form-check mb-2 p-3 border rounded-3">
+            <input class="form-check-input" type="radio" name="payment_method" value="card" id="payCard">
+            <label class="form-check-label fw-semibold" for="payCard"><i class="bi bi-credit-card me-2"></i>Credit / Debit Card</label>
+          </div>
+          <div class="form-check p-3 border rounded-3">
+            <input class="form-check-input" type="radio" name="payment_method" value="wallet" id="payWallet">
+            <label class="form-check-label fw-semibold" for="payWallet"><i class="bi bi-wallet2 me-2"></i>Mobile Wallet (JazzCash / EasyPaisa)</label>
+          </div>
+        </div>
+
+        <div class="pd-card p-4">
+          <label class="form-label">Order Notes (optional)</label>
+          <textarea name="notes" class="form-control" rows="3" placeholder="Delivery instructions, etc."></textarea>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="pd-card p-4 sticky-summary">
+          <h6 class="mb-3">Order Summary</h6>
+          <% items.forEach(item => { %>
+            <div class="d-flex justify-content-between small mb-2">
+              <span class="text-muted"><%= item.product_name %> × <%= item.quantity %></span>
+              <span>Rs <%= (item.unit_price * item.quantity).toFixed(2) %></span>
+            </div>
+          <% }) %>
+          <hr>
+          <div class="d-flex justify-content-between mb-2"><span class="text-muted">Subtotal</span><span>Rs <%= subtotal.toFixed(2) %></span></div>
+          <div class="d-flex justify-content-between mb-2"><span class="text-muted">Shipping</span><span><%= shipping_fee === 0 ? 'FREE' : 'Rs ' + shipping_fee.toFixed(2) %></span></div>
+          <hr>
+          <div class="d-flex justify-content-between fw-bold fs-5 mb-4"><span>Total</span><span>Rs <%= total.toFixed(2) %></span></div>
+          <button type="submit" class="btn btn-podify-primary w-100 py-2 rounded-pill-lg">Place Order</button>
+          <p class="text-muted small text-center mt-3"><i class="bi bi-shield-check me-1"></i>Your information is safe and secure</p>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>

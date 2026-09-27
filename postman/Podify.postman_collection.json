@@ -1,0 +1,186 @@
+{
+  "info": {
+    "name": "Podify API",
+    "description": "Podify — Custom Printing Platform. Auth uses an HttpOnly cookie set by /auth/login; Postman will store it automatically if cookie jar is enabled for localhost.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "name", "value": "Test User" },
+              { "key": "email", "value": "testuser@example.com" },
+              { "key": "phone", "value": "03001234567" },
+              { "key": "password", "value": "Test@123" },
+              { "key": "confirm_password", "value": "Test@123" },
+              { "key": "role", "value": "customer" },
+              { "key": "city", "value": "Karachi" }
+            ]},
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "email", "value": "customer@podify.com" },
+              { "key": "password", "value": "Customer@123" }
+            ]},
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        { "name": "Logout", "request": { "method": "GET", "url": "{{baseUrl}}/auth/logout" } }
+      ]
+    },
+    {
+      "name": "Pricing Engine",
+      "item": [
+        {
+          "name": "Calculate Price",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": 1,\n  \"materialId\": 1,\n  \"printSizeId\": 2,\n  \"hasBackPrint\": false,\n  \"quantity\": 2\n}" },
+            "url": "{{baseUrl}}/api/price/calculate"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": 1,\n  \"materialId\": 1,\n  \"printSizeId\": 1,\n  \"hasBackPrint\": false,\n  \"quantity\": 1,\n  \"customization\": {}\n}" },
+            "url": "{{baseUrl}}/api/cart/add"
+          }
+        },
+        {
+          "name": "Update Cart Item",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 3\n}" },
+            "url": "{{baseUrl}}/api/cart/update/1"
+          }
+        },
+        { "name": "Remove Cart Item", "request": { "method": "POST", "url": "{{baseUrl}}/api/cart/remove/1" } },
+        { "name": "View Cart Page", "request": { "method": "GET", "url": "{{baseUrl}}/user/cart" } }
+      ]
+    },
+    {
+      "name": "Checkout & Orders",
+      "item": [
+        {
+          "name": "Checkout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "shipping_name", "value": "Ayesha Khan" },
+              { "key": "shipping_phone", "value": "03211234567" },
+              { "key": "shipping_address", "value": "Street 12, Gulberg III" },
+              { "key": "shipping_city", "value": "Lahore" },
+              { "key": "payment_method", "value": "cod" }
+            ]},
+            "url": "{{baseUrl}}/user/checkout"
+          }
+        },
+        { "name": "My Orders", "request": { "method": "GET", "url": "{{baseUrl}}/user/orders" } },
+        { "name": "Order Detail", "request": { "method": "GET", "url": "{{baseUrl}}/user/orders/1" } }
+      ]
+    },
+    {
+      "name": "Favorites & Reviews",
+      "item": [
+        { "name": "Toggle Favorite", "request": { "method": "POST", "url": "{{baseUrl}}/api/favorites/toggle/1" } },
+        {
+          "name": "Add Review",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": 1,\n  \"orderItemId\": 1,\n  \"rating\": 5,\n  \"comment\": \"Excellent quality print!\"\n}" },
+            "url": "{{baseUrl}}/api/reviews/add"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vendor",
+      "item": [
+        { "name": "Vendor Dashboard", "request": { "method": "GET", "url": "{{baseUrl}}/vendor/dashboard" } },
+        { "name": "My Products", "request": { "method": "GET", "url": "{{baseUrl}}/vendor/products" } },
+        { "name": "Vendor Orders", "request": { "method": "GET", "url": "{{baseUrl}}/vendor/orders" } },
+        {
+          "name": "Update Order Item Status",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"confirmed\"\n}" },
+            "url": "{{baseUrl}}/vendor/orders/1/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        { "name": "Admin Dashboard", "request": { "method": "GET", "url": "{{baseUrl}}/admin/dashboard" } },
+        { "name": "Pending Vendors", "request": { "method": "GET", "url": "{{baseUrl}}/admin/vendors" } },
+        { "name": "Approve Vendor", "request": { "method": "POST", "url": "{{baseUrl}}/admin/vendors/1/approve" } },
+        { "name": "Pending Products", "request": { "method": "GET", "url": "{{baseUrl}}/admin/products?status=pending" } },
+        { "name": "Approve Product", "request": { "method": "POST", "url": "{{baseUrl}}/admin/products/1/approve" } },
+        {
+          "name": "Admin: Add Product Directly (new)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "name", "value": "Admin Direct Product" },
+              { "key": "base_price", "value": "500" },
+              { "key": "description", "value": "Created directly by admin" }
+            ]},
+            "url": "{{baseUrl}}/admin/products/new"
+          }
+        },
+        {
+          "name": "Admin: Override Order Item Status (new)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"shipped\"\n}" },
+            "url": "{{baseUrl}}/admin/order-items/1/status"
+          }
+        },
+        {
+          "name": "Add Material",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "name", "value": "Wooden Panel" },
+              { "key": "price_per_unit", "value": "9.5" },
+              { "key": "description", "value": "Engraved wood finish" }
+            ]},
+            "url": "{{baseUrl}}/admin/materials/new"
+          }
+        },
+        { "name": "Reports", "request": { "method": "GET", "url": "{{baseUrl}}/admin/reports" } }
+      ]
+    }
+  ]
+}

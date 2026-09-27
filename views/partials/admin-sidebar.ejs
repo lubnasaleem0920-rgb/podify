@@ -1,0 +1,29 @@
+<aside class="dash-sidebar">
+  <div class="d-flex align-items-center gap-2 mb-4 px-2">
+    <div class="brand-mark"><i class="bi bi-stars"></i></div>
+    <span class="brand-text">Podify</span>
+  </div>
+  <div class="side-heading">Overview</div>
+  <a href="/admin/dashboard" class="side-link <%= currentPath === '/admin/dashboard' ? 'active' : '' %>"><i class="bi bi-speedometer2"></i> Dashboard</a>
+  <a href="/admin/reports" class="side-link <%= currentPath === '/admin/reports' ? 'active' : '' %>"><i class="bi bi-graph-up"></i> Reports & Analytics</a>
+
+  <div class="side-heading">Catalog</div>
+  <a href="/admin/products" class="side-link <%= currentPath.startsWith('/admin/products') ? 'active' : '' %>"><i class="bi bi-box-seam"></i> Products</a>
+  <a href="/admin/categories" class="side-link <%= currentPath === '/admin/categories' ? 'active' : '' %>"><i class="bi bi-tags"></i> Categories</a>
+  <a href="/admin/materials" class="side-link <%= currentPath === '/admin/materials' ? 'active' : '' %>"><i class="bi bi-layers"></i> Materials</a>
+  <a href="/admin/sizes" class="side-link <%= currentPath === '/admin/sizes' ? 'active' : '' %>"><i class="bi bi-aspect-ratio"></i> Print Sizes</a>
+  <a href="/admin/fonts" class="side-link <%= currentPath === '/admin/fonts' ? 'active' : '' %>"><i class="bi bi-fonts"></i> Fonts</a>
+
+  <div class="side-heading">People</div>
+  <a href="/admin/users" class="side-link <%= currentPath === '/admin/users' ? 'active' : '' %>"><i class="bi bi-people"></i> Users</a>
+  <a href="/admin/vendors" class="side-link <%= currentPath === '/admin/vendors' ? 'active' : '' %>"><i class="bi bi-shop"></i> Vendors</a>
+
+  <div class="side-heading">Orders</div>
+  <a href="/admin/orders" class="side-link <%= currentPath.startsWith('/admin/orders') ? 'active' : '' %>"><i class="bi bi-bag-check"></i> All Orders</a>
+
+  <div class="side-heading">System</div>
+  <a href="/admin/logs" class="side-link <%= currentPath === '/admin/logs' ? 'active' : '' %>"><i class="bi bi-clock-history"></i> Activity Logs</a>
+  <a href="/admin/settings" class="side-link <%= currentPath === '/admin/settings' ? 'active' : '' %>"><i class="bi bi-gear"></i> Settings</a>
+  <a href="/admin/profile" class="side-link <%= currentPath === '/admin/profile' ? 'active' : '' %>"><i class="bi bi-person-circle"></i> Profile Settings</a>
+  <a href="/auth/logout" class="side-link text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+</aside>

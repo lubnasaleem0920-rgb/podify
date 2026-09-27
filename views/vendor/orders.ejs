@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/vendor-sidebar') %>
+  <main class="dash-main">
+    <h3 class="mb-4">Orders</h3>
+    <% if (items.length === 0) { %>
+      <div class="empty-state"><i class="bi bi-bag-check"></i><h5>No orders yet</h5></div>
+    <% } else { %>
+      <div class="pd-card">
+        <div class="table-responsive">
+          <table class="table pd-table mb-0">
+            <thead><tr><th>Product</th><th>Order #</th><th>Customer</th><th>Qty</th><th>Total</th><th>Status</th><th>Design</th><th>Update</th></tr></thead>
+            <tbody>
+              <% items.forEach(item => { %>
+                <tr>
+                  <td><div class="d-flex align-items-center gap-2"><img src="<%= item.front_image %>" style="width:36px;height:36px;object-fit:cover;border-radius:8px;"><span class="small"><%= item.product_name %><% if (item.color_name) { %><br><span class="text-muted" style="font-size:0.72rem;"><span class="d-inline-block rounded-circle me-1" style="width:8px;height:8px;background:<%= item.color_hex %>;"></span><%= item.color_name %></span><% } %></span></div></td>
+                  <td class="small fw-semibold"><%= item.order_number %></td>
+                  <td class="small"><%= item.shipping_name %> <br><span class="text-muted"><%= item.shipping_city %></span></td>
+                  <td><%= item.quantity %></td>
+                  <td>Rs <%= item.line_total.toFixed(2) %></td>
+                  <td><span class="status-pill status-<%= item.item_status %>"><%= item.item_status.replace('_',' ') %></span></td>
+                  <td><% if (item.front_preview) { %><a href="/vendor/orders/design/<%= item.id %>/download" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="bi bi-download"></i></a><% } else { %>—<% } %></td>
+                  <td>
+                    <select class="form-select form-select-sm status-update-select" data-item-id="<%= item.id %>" style="width:150px;">
+                      <option value="">Update status...</option>
+                      <option value="confirmed" <%= item.item_status==='confirmed'?'selected':'' %>>Confirmed</option>
+                      <option value="in_production" <%= item.item_status==='in_production'?'selected':'' %>>In Production</option>
+                      <option value="shipped" <%= item.item_status==='shipped'?'selected':'' %>>Shipped</option>
+                      <option value="delivered" <%= item.item_status==='delivered'?'selected':'' %>>Delivered</option>
+                      <option value="cancelled" <%= item.item_status==='cancelled'?'selected':'' %>>Cancelled</option>
+                    </select>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } %>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+<script>
+document.querySelectorAll('.status-update-select').forEach(sel => {
+  sel.addEventListener('change', async () => {
+    if (!sel.value) return;
+    const res = await fetch(`/vendor/orders/${sel.dataset.itemId}/status`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ status: sel.value }) });
+    const data = await res.json();
+    if (data.ok) window.location.reload(); else alert(data.error || 'Failed to update');
+  });
+});
+</script>
+</body>
+</html>

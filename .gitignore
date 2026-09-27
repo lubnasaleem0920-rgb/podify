@@ -1,0 +1,11 @@
+node_modules/
+npm-debug.log*
+.DS_Store
+*.log
+
+# Keep the database out of version control (but we ship it pre-seeded in the zip)
+# database/*.db
+# database/*.db-wal
+# database/*.db-shm
+
+.env.local

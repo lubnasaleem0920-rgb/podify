@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <radialGradient id="bgGlow1" cx="25%" cy="15%" r="60%">
+      <stop offset="0" stop-color="#2A2420" stop-opacity="0.55"/><stop offset="1" stop-color="#0A0912" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlow2" cx="85%" cy="85%" r="55%">
+      <stop offset="0" stop-color="#1A1613" stop-opacity="0.4"/><stop offset="1" stop-color="#0A0912" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mugBody" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#173A8C"/>
+      <stop offset="0.22" stop-color="#5B8DEF"/>
+      <stop offset="0.5" stop-color="#2E5CD9"/>
+      <stop offset="0.85" stop-color="#173A8C"/>
+      <stop offset="1" stop-color="#173A8C"/>
+    </linearGradient>
+    <linearGradient id="mugHandle" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5B8DEF"/><stop offset="1" stop-color="#173A8C"/>
+    </linearGradient>
+    <radialGradient id="mugTop" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#173A8C"/><stop offset="0.7" stop-color="#2E5CD9"/><stop offset="1" stop-color="#5B8DEF"/>
+    </radialGradient>
+    <radialGradient id="groundShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.55"/><stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="500" height="500" fill="#0A0912"/>
+  <rect width="500" height="500" fill="url(#bgGlow1)"/>
+  <rect width="500" height="500" fill="url(#bgGlow2)"/>
+  <ellipse cx="250" cy="430" rx="135" ry="18" fill="url(#groundShadow)"/>
+
+  <!-- handle -->
+  <path d="M335 215 Q410 215 410 275 Q410 335 335 335 L335 300 Q375 300 375 275 Q375 250 335 250 Z" fill="url(#mugHandle)" stroke="#00000030" stroke-width="1.5"/>
+
+  <!-- body -->
+  <path d="M140 195 L360 195 L347 400 Q343 425 315 425 L185 425 Q157 425 153 400 Z" fill="url(#mugBody)" stroke="#00000030" stroke-width="1.5"/>
+
+  <!-- rim -->
+  <ellipse cx="250" cy="195" rx="110" ry="16" fill="url(#mugTop)" stroke="#00000030" stroke-width="1.5"/>
+  <ellipse cx="250" cy="192" rx="96" ry="10" fill="#00000030"/>
+
+  <!-- highlight streak -->
+  <path d="M178 210 Q172 300 182 400" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="16" stroke-linecap="round"/>
+
+  <!-- printable area -->
+  <rect id="printArea" x="168" y="235" width="164" height="130" rx="8" fill="#FFFFFF" fill-opacity="0.07" stroke="#F5F0E0" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="250" y="303" font-family="Poppins, sans-serif" font-size="14" fill="#F5F0E0" fill-opacity="0.55" text-anchor="middle">Your Design</text>
+  <text x="250" y="321" font-family="Poppins, sans-serif" font-size="14" fill="#F5F0E0" fill-opacity="0.55" text-anchor="middle">Here</text>
+</svg>

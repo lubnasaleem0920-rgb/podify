@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/user-sidebar') %>
+  <main class="dash-main">
+    <h3 class="mb-4">My Orders</h3>
+    <% if (orders.length === 0) { %>
+      <div class="empty-state"><i class="bi bi-box-seam"></i><h5>No orders yet</h5><a href="/products" class="btn btn-podify-primary rounded-pill px-4 mt-2">Browse Products</a></div>
+    <% } else { %>
+      <div class="pd-card">
+        <div class="table-responsive">
+          <table class="table pd-table mb-0">
+            <thead><tr><th>Order #</th><th>Date</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <% orders.forEach(o => { %>
+                <tr>
+                  <td class="fw-semibold"><%= o.order_number %></td>
+                  <td class="text-muted small"><%= new Date(o.created_at).toLocaleDateString() %></td>
+                  <td class="text-muted small"><%= o.payment_method.toUpperCase() %></td>
+                  <td>Rs <%= o.total.toFixed(2) %></td>
+                  <td><span class="status-pill status-<%= o.payment_status %>"><%= o.payment_status %></span></td>
+                  <td><span class="status-pill status-<%= o.status %>"><%= o.status.replace('_',' ') %></span></td>
+                  <td><a href="/user/orders/<%= o.id %>" class="btn btn-sm btn-podify-outline rounded-pill">Track</a></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } %>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>

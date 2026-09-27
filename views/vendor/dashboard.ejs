@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/vendor-sidebar') %>
+  <main class="dash-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div><h3 class="mb-0">Vendor Dashboard</h3><p class="text-muted mb-0">Manage your products and orders</p></div>
+      <a href="/vendor/products/new" class="btn btn-podify-primary rounded-pill px-4"><i class="bi bi-plus-lg me-1"></i>Add Product</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-gradient);"><i class="bi bi-box-seam"></i></div><div class="stat-value"><%= productCount %></div><div class="stat-label">My Products</div></div></div>
+      <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-warning);"><i class="bi bi-hourglass-split"></i></div><div class="stat-value"><%= pendingCount %></div><div class="stat-label">Pending Approval</div></div></div>
+      <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-accent);"><i class="bi bi-bag-check"></i></div><div class="stat-value"><%= orderItemCount %></div><div class="stat-label">Orders Received</div></div></div>
+      <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-icon" style="background:var(--pd-success);"><i class="bi bi-cash-coin"></i></div><div class="stat-value">Rs <%= revenue.toFixed(0) %></div><div class="stat-label">Total Revenue</div></div></div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="pd-card p-4">
+          <div class="d-flex justify-content-between mb-3"><h6 class="mb-0">Recent Orders</h6><a href="/vendor/orders" class="small">View all →</a></div>
+          <% if (recentOrders.length === 0) { %>
+            <p class="text-muted small">No orders yet.</p>
+          <% } else { %>
+            <table class="table pd-table mb-0">
+              <thead><tr><th>Order</th><th>Product</th><th>Qty</th><th>Status</th></tr></thead>
+              <tbody>
+                <% recentOrders.forEach(o => { %>
+                  <tr><td class="fw-semibold small"><%= o.order_number %></td><td class="small"><%= o.product_name %></td><td class="small"><%= o.quantity %></td><td><span class="status-pill status-<%= o.item_status %>"><%= o.item_status.replace('_',' ') %></span></td></tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="pd-card p-4">
+          <h6 class="mb-3">Top Products</h6>
+          <% topProducts.forEach(p => { %>
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <img src="<%= p.front_image %>" class="rounded-3" style="width:48px;height:48px;object-fit:cover;">
+              <div class="flex-grow-1">
+                <div class="small fw-semibold"><%= p.name %></div>
+                <div class="rating-stars" style="font-size:0.7rem;"><% for(let i=1;i<=5;i++){ %><i class="bi <%= i<=Math.round(p.rating_avg)?'bi-star-fill':'bi-star' %>"></i><% } %></div>
+              </div>
+              <span class="status-pill status-<%= p.status %>"><%= p.status %></span>
+            </div>
+          <% }) %>
+          <% if (topProducts.length === 0) { %><p class="text-muted small">No products yet.</p><% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>

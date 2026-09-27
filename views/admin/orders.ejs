@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+<div class="dash-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <main class="dash-main">
+    <h3 class="mb-4">Order Management</h3>
+    <div class="pd-card">
+      <div class="table-responsive">
+        <table class="table pd-table mb-0">
+          <thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th></th></tr></thead>
+          <tbody>
+            <% orders.forEach(o => { %>
+              <tr>
+                <td class="fw-semibold small"><%= o.order_number %></td>
+                <td class="small"><%= o.customer_name %><br><span class="text-muted"><%= o.customer_email %></span></td>
+                <td>Rs <%= o.total.toFixed(2) %></td>
+                <td><span class="status-pill status-<%= o.payment_status %>"><%= o.payment_status %></span></td>
+                <td><span class="status-pill status-<%= o.status %>"><%= o.status.replace('_',' ') %></span></td>
+                <td class="text-muted small"><%= new Date(o.created_at).toLocaleDateString() %></td>
+                <td><a href="/admin/orders/<%= o.id %>" class="btn btn-sm btn-podify-outline rounded-pill">View</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% if (orders.length === 0) { %><p class="text-muted text-center py-4 mb-0">No orders yet.</p><% } %>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>
